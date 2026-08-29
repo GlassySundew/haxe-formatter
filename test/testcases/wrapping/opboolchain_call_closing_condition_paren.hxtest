@@ -1,0 +1,40 @@
+{
+	"indentation": {
+		"conditionalPolicy": "aligned"
+	},
+	"whitespace": {
+		"parenConfig": {
+			"ifConditionParens": {
+				"openingPolicy": "around",
+				"closingPolicy": "around"
+			}
+		}
+	},
+	"wrapping": {
+		"opBoolChain": {
+			"defaultWrap": "keep"
+		}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		if (
+			foo < bar
+			|| baz()
+		) {}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		if (
+			foo < bar
+			|| baz()
+		) {}
+	}
+}

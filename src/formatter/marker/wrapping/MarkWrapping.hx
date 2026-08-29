@@ -733,16 +733,19 @@ class MarkWrapping extends MarkWrappingBase {
 		if (prev != null) {
 			chainStart = prev.token;
 		}
-		var chainEnd:Null<TokenTree> = itemStart.getLastChild();
-		if (chainEnd != null) {
-			chainEnd = TokenTreeCheckUtils.getLastToken(chainEnd);
-			switch (chainEnd.tok) {
-				case Semicolon, Comma, PClose:
-				default:
-					var next:Null<TokenInfo> = getNextToken(chainEnd);
-					if (next != null) {
-						chainEnd = next.token;
-					}
+		var chainEnd:Null<TokenTree> = getCloseToken(chainStart);
+		if (chainEnd == null) {
+			chainEnd = itemStart.getLastChild();
+			if (chainEnd != null) {
+				chainEnd = TokenTreeCheckUtils.getLastToken(chainEnd);
+				switch (chainEnd.tok) {
+					case Semicolon, Comma, PClose:
+					default:
+						var next:Null<TokenInfo> = getNextToken(chainEnd);
+						if (next != null) {
+							chainEnd = next.token;
+						}
+				}
 			}
 		}
 		var first:Bool = true;
