@@ -1,0 +1,25 @@
+{
+	"sameLine": {
+		"assignment": "next"
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		var test = fn();
+		test += fn();
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		var test =
+			fn();
+		test +=
+			fn();
+	}
+}

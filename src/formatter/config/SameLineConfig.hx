@@ -2,6 +2,14 @@ package formatter.config;
 
 typedef SameLineConfig = {
 	/**
+		same line policy for the value of an assignment
+		* same = place the value on the same line as the assignment operator
+		* next = place the value on the next line
+		* keep = keep same / next line from source
+	**/
+	@:default(Same) @:optional var assignment:SameLinePolicy;
+
+	/**
 		same line policy for non block body of "if"
 		* same = place if and body on same line
 		* next = place body on next line

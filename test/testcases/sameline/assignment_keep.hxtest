@@ -1,0 +1,29 @@
+{
+	"sameLine": {
+		"assignment": "keep"
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		var wrapped =
+			fn();
+		var inline = fn();
+		wrapped +=
+			fn();
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		var wrapped =
+			fn();
+		var inline = fn();
+		wrapped +=
+			fn();
+	}
+}

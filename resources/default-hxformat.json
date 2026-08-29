@@ -144,6 +144,7 @@
 	},
 	"sameLine": {
 		"anonFunctionBody": "same",
+		"assignment": "same",
 		"caseBody": "next",
 		"catchBody": "next",
 		"comprehensionFor": "same",

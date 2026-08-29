@@ -1056,6 +1056,11 @@
 					"$ref": "#/definitions/formatter.config.SameLinePolicy",
 					"default": "same"
 				},
+				"assignment": {
+					"description": "same line policy for the value of an assignment * same = place the value on the same line as the assignment operator * next = place the value on the next line * keep = keep same / next line from source",
+					"$ref": "#/definitions/formatter.config.SameLinePolicy",
+					"default": "same"
+				},
 				"expressionCase": {
 					"$ref": "#/definitions/formatter.config.SameLinePolicy",
 					"default": "keep"

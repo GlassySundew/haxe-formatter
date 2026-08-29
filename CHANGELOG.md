@@ -2,6 +2,7 @@
 
 ## dev branch / next version (1.x.x)
 
+- added `sameLine.assignment` to configure line breaks after assignment operators
 - added `-e` option to allow formatting files not ending in `.hx`
 
 ## version 1.18.0 (2024-12-23)

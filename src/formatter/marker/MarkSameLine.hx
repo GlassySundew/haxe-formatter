@@ -11,6 +11,8 @@ class MarkSameLine extends MarkerBase {
 				return GoDeeper;
 			}
 			switch (token.tok) {
+				case Binop(OpAssign), Binop(OpAssignOp(_)):
+					markAssignment(token);
 				case Kwd(KwdIf):
 					markIf(token);
 				case Kwd(KwdElse):
@@ -44,6 +46,17 @@ class MarkSameLine extends MarkerBase {
 			}
 			return GoDeeper;
 		});
+	}
+
+	function markAssignment(token:TokenTree) {
+		if (config.sameLine.assignment == Same) {
+			return;
+		}
+		var value:Null<TokenInfo> = getNextToken(token);
+		if (value == null) {
+			return;
+		}
+		applySameLinePolicy(value.token, config.sameLine.assignment);
 	}
 
 	function isExpression(token:Null<TokenTree>):Bool {
