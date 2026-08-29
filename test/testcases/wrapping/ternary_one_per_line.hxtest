@@ -1,0 +1,26 @@
+{
+	"wrapping": {
+		"ternary": {
+			"defaultWrap": "onePerLine"
+		}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test = isBool ? one : two;
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test =
+			isBool
+				? one
+				: two;
+	}
+}

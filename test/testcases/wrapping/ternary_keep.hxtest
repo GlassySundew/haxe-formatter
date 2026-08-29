@@ -1,0 +1,37 @@
+{
+	"wrapping": {
+		"ternary": {
+			"defaultWrap": "keep"
+		}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test =
+			isBool
+				? one
+				: two;
+		final complex = foo == bar
+			? one
+			: two;
+		final inlineValue = isBool ? one : two;
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test =
+			isBool
+				? one
+				: two;
+		final complex = foo == bar
+			? one
+			: two;
+		final inlineValue = isBool ? one : two;
+	}
+}

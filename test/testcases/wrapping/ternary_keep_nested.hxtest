@@ -1,0 +1,33 @@
+{
+	"wrapping": {
+		"ternary": {
+			"defaultWrap": "keep"
+		}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test =
+			first
+				? second
+				: third
+					? fourth
+					: fifth;
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		final test =
+			first
+				? second
+				: third
+					? fourth
+					: fifth;
+	}
+}

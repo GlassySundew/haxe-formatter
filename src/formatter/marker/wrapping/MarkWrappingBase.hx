@@ -997,6 +997,8 @@ class MarkWrappingBase extends MarkerBase {
 				"OpAddChainWrapping";
 			case OpBoolChainWrapping:
 				"OpBoolChainWrapping";
+			case TernaryWrapping:
+				"TernaryWrapping";
 			case TypeParameterWrapping:
 				"TypeParameterWrapping";
 		}
@@ -1027,5 +1029,6 @@ enum WrappingOrigin {
 	MultiVarWrapping;
 	OpAddChainWrapping;
 	OpBoolChainWrapping;
+	TernaryWrapping;
 	TypeParameterWrapping;
 }

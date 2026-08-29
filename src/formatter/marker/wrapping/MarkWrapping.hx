@@ -3,6 +3,8 @@ package formatter.marker.wrapping;
 import formatter.config.WrapConfig;
 
 class MarkWrapping extends MarkWrappingBase {
+	var wrappedTernaries:Array<TokenTree> = [];
+
 	public function run() {
 		var wrappableTokens:Array<TokenTree> = parsedCode.root.filterCallback(function(token:TokenTree, index:Int):FilterResult {
 			switch (token.tok) {
@@ -22,6 +24,10 @@ class MarkWrapping extends MarkWrappingBase {
 					return FoundGoDeeper;
 				case CommentLine(_):
 					return FoundGoDeeper;
+				case Question:
+					if (TokenTreeCheckUtils.isTernary(token)) {
+						return FoundGoDeeper;
+					}
 				case Comma:
 					wrapAfter(token, true);
 					return GoDeeper;
@@ -50,18 +56,130 @@ class MarkWrapping extends MarkWrappingBase {
 					wrapAfter(token, true);
 				case CommentLine(_):
 					wrapBefore(token, false);
+
+				case Question:
+					markTernaryWrapping(token);
 				default:
 			}
 		}
-
 		markMethodChaining(parsedCode.root);
 		markMultiVarChaining();
 		markImplementsExtendsChaining();
 		markOpBoolChaining();
 		markOpAddChaining();
 		markCasePatternChaining();
-
 		applyWrappingQueue();
+		markTernaryIndentation();
+	}
+
+	function markTernaryIndentation() {
+		for (question in wrappedTernaries) {
+			var nestedDepth:Int = 0;
+			var ancestor:Null<TokenTree> = question.parent;
+			while ((ancestor != null) && (ancestor.tok != Root)) {
+				if (ancestor.tok.match(Question) && TokenTreeCheckUtils.isTernary(ancestor)) {
+					nestedDepth++;
+				}
+
+				ancestor = ancestor.parent;
+			}
+			var boundary:Null<TokenTree> = question.parent == null ? null : findTernaryBoundary(question.parent);
+			var conditionStart:Null<TokenTree> = getTokenAfter(boundary);
+			var depth:Int = nestedDepth * 2;
+			if ((conditionStart != null) && isNewLineBefore(conditionStart)) {
+				depth++;
+			}
+			additionalIndent(question, depth);
+			if (question.children != null) {
+				for (child in question.children) {
+					if (child.tok.match(DblDot)) {
+						additionalIndent(child, depth);
+						break;
+					}
+				}
+			}
+		}
+	}
+
+	function markTernaryWrapping(question:TokenTree) {
+		if (!TokenTreeCheckUtils.isTernary(question) || (question.parent == null)) {
+			return;
+		}
+		var colon:Null<TokenTree> = null;
+		if (question.children != null) {
+			for (child in question.children) {
+				if (child.tok.match(DblDot)) {
+					colon = child;
+					break;
+				}
+			}
+		}
+		if (colon == null) {
+			return;
+		}
+		var boundary:Null<TokenTree> = findTernaryBoundary(question.parent);
+		var conditionStart:Null<TokenTree> = getTokenAfter(boundary);
+		var conditionEnd:Null<TokenTree> = getTokenBefore(question);
+		var trueStart:Null<TokenTree> = getTokenAfter(question);
+		var trueEnd:Null<TokenTree> = getTokenBefore(colon);
+		var falseStart:Null<TokenTree> = getTokenAfter(colon);
+		if ((conditionStart == null) || (conditionEnd == null) || (trueStart == null) || (trueEnd == null) || (falseStart == null)) {
+			return;
+		}
+		var falseEnd:Null<TokenTree> = TokenTreeCheckUtils.getLastToken(falseStart);
+		if (falseEnd == null) {
+			return;
+		}
+		var items:Array<WrappableItem> = [
+			makeWrappableItem(conditionStart, conditionEnd),
+			makeWrappableItem(question, trueEnd),
+			makeWrappableItem(colon, falseEnd)
+		];
+		var rule:WrapRule = determineWrapType2(config.wrapping.ternary, boundary, items);
+		if (rule.type == NoWrap) {
+			return;
+		}
+		wrappedTernaries.push(question);
+		queueWrapping({
+			origin: TernaryWrapping,
+			start: boundary,
+			end: falseEnd,
+			items: items,
+			rules: config.wrapping.ternary,
+
+			useTrailing: false,
+			overrideAdditionalIndent: null
+		}, "markTernaryWrapping");
+	}
+
+	function getTokenAfter(token:Null<TokenTree>):Null<TokenTree> {
+		if (token == null) {
+			return null;
+		}
+		var next:Null<TokenInfo> = getNextToken(token);
+		return next == null ? null : next.token;
+	}
+
+	function getTokenBefore(token:Null<TokenTree>):Null<TokenTree> {
+		if (token == null) {
+			return null;
+		}
+		var previous:Null<TokenInfo> = getPreviousToken(token);
+		return previous == null ? null : previous.token;
+	}
+
+	function findTernaryBoundary(conditionEnd:TokenTree):Null<TokenTree> {
+		var token:Null<TokenTree> = conditionEnd;
+		while ((token != null) && (token.parent != null) && (token.parent.tok != Root)) {
+			var parent:TokenTree = token.parent;
+			switch (parent.tok) {
+				case Binop(OpAssign), Binop(OpAssignOp(_)), Kwd(KwdReturn), Arrow, Comma, POpen, BkOpen, BrOpen, Question, DblDot:
+					return parent;
+				default:
+					token = parent;
+			}
+		}
+		return getTokenBefore(token);
 	}
 
 	function wrapTypeParameter(token:TokenTree) {

@@ -996,6 +996,10 @@
 				}
 			]
 		},
+		"ternary": {
+			"defaultWrap": "noWrap",
+			"rules": []
+		},
 		"typeParameter": {
 			"defaultWrap": "noWrap",
 			"rules": [

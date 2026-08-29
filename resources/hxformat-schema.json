@@ -1283,6 +1283,10 @@
 					"description": "call parameter wrapping rules",
 					"$ref": "#/definitions/formatter.config.WrapRules"
 				},
+				"ternary": {
+					"description": "ternary expression wrapping rules",
+					"$ref": "#/definitions/formatter.config.WrapRules"
+				},
 				"arrayMatrixWrap": {
 					"description": "detect arrays in matrix configuration from source noMatrixWrap = no detection matrixWrapNoAlign = detect and format as matrix without alignment matrixWrapWithAlign = detect and format as matrix and align columns",
 					"$ref": "#/definitions/formatter.config.ArrayMatrixWrap",

@@ -367,6 +367,16 @@ typedef WrapConfig = {
 	var opBoolChain:WrapRules;
 
 	/**
+		ternary expression wrapping rules
+	**/
+	@:default({
+		defaultWrap: NoWrap,
+		rules: []
+	})
+	@:optional
+	var ternary:WrapRules;
+
+	/**
 		implements / extends chain wrapping rules
 	**/
 	@:default({
