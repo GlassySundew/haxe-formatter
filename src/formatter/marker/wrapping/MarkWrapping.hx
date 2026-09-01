@@ -4,6 +4,7 @@ import formatter.config.WrapConfig;
 
 class MarkWrapping extends MarkWrappingBase {
 	var wrappedTernaries:Array<TokenTree> = [];
+	var opBoolChainParentheses:Array<TokenTree> = [];
 
 	public function run() {
 		var wrappableTokens:Array<TokenTree> = parsedCode.root.filterCallback(function(token:TokenTree, index:Int):FilterResult {
@@ -69,6 +70,7 @@ class MarkWrapping extends MarkWrappingBase {
 		markOpAddChaining();
 		markCasePatternChaining();
 		applyWrappingQueue();
+		restoreOpBoolChainParenthesisBreaks();
 		markTernaryIndentation();
 	}
 
@@ -748,6 +750,7 @@ class MarkWrapping extends MarkWrappingBase {
 				}
 			}
 		}
+		collectOpBoolChainParentheses(chainStart, chainEnd);
 		var first:Bool = true;
 		if (itemStart.children != null) {
 			for (child in itemStart.children) {
@@ -778,6 +781,42 @@ class MarkWrapping extends MarkWrappingBase {
 			useTrailing: false,
 			overrideAdditionalIndent: null
 		}, "markSingleOpBoolChain");
+	}
+
+	function collectOpBoolChainParentheses(start:TokenTree, end:Null<TokenTree>) {
+		if (end == null) {
+			return;
+		}
+		for (index in start.index...end.index + 1) {
+			var info:Null<TokenInfo> = getTokenAt(index);
+			if (info == null) {
+				continue;
+			}
+			switch (info.token.tok) {
+				case POpen, PClose:
+					if (opBoolChainParentheses.indexOf(info.token) < 0) {
+						opBoolChainParentheses.push(info.token);
+					}
+				default:
+			}
+		}
+	}
+
+	function restoreOpBoolChainParenthesisBreaks() {
+		for (token in opBoolChainParentheses) {
+			switch (token.tok) {
+				case POpen:
+					var next:Null<TokenInfo> = getNextToken(token);
+					if ((next != null) && parsedCode.isOriginalNewlineBefore(next.token)) {
+						lineEndAfter(token);
+					}
+				case PClose:
+					if (parsedCode.isOriginalNewlineBefore(token)) {
+						lineEndBefore(token);
+					}
+				default:
+			}
+		}
 	}
 
 	function markCasePatternChaining() {

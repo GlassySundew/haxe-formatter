@@ -1,0 +1,46 @@
+{
+	"indentation": {
+		"conditionalPolicy": "aligned"
+	},
+	"whitespace": {
+		"parenConfig": {
+			"ifConditionParens": {
+				"openingPolicy": "around",
+				"closingPolicy": "around"
+			}
+		}
+	},
+	"wrapping": {
+		"opBoolChain": {
+			"defaultWrap": "keep"
+		}
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		if (
+			(
+				slotCheck != null
+				&& !slotCheck(slotEntity)
+			) || !slotEntity.exists(world, ItemLink)
+		)
+			return true;
+	}
+}
+
+---
+
+class Main {
+	static function main() {
+		if (
+			(
+				slotCheck != null
+				&& !slotCheck(slotEntity)
+			) || !slotEntity.exists(world, ItemLink)
+		)
+			return true;
+	}
+}
