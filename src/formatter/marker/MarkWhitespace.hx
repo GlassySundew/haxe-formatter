@@ -30,8 +30,12 @@ class MarkWhitespace extends MarkerBase {
 						var policy:WhitespacePolicy = config.whitespace.binopPolicy.remove(After);
 						var prev:TokenInfo = getPreviousToken(token);
 						switch (prev.token.tok) {
-							case POpen, BkOpen:
+						case POpen:
+							if (TokenTreeCheckUtils.getPOpenType(prev.token) != Call) {
 								policy = policy.remove(Before);
+							}
+						case BkOpen:
+							policy = policy.remove(Before);
 							default:
 						}
 						whitespace(token, policy);

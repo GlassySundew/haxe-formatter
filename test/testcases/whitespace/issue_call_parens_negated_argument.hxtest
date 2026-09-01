@@ -1,0 +1,20 @@
+{
+  "whitespace": {
+    "parenConfig": {
+      "callParens": {
+        "openingPolicy": "onlyAfter",
+        "closingPolicy": "before"
+      }
+    }
+  }
+}
+
+---
+
+foo( -bar );
+foo( -42 );
+
+---
+
+foo( -bar );
+foo( -42 );
